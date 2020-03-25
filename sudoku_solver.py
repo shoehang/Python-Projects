@@ -11,17 +11,17 @@ def sudoku_setup():
 		   [0,0,4,0,0,0,7,0,0],
 		   [0,0,0,0,0,7,0,6,0],
 		   [1,0,6,4,0,0,0,0,3]]
-	return lst
+	return lst2
 
 # function to check the next empty position
 # on the sudoku puzzle represented by a '0'
 # sets current row and col to pos if found
-def next_empty_pos(lst, row, col):
-	for i in range(9):
-		for j in range(9):
-			if (lst[i][j] == 0):
-				row = i
-				col = j
+def next_empty_pos(lst, pos):
+	for row in range(9):
+		for col in range(9):
+			if (lst[row][col] == 0):
+				pos[0] = row
+				pos[1] = col
 				return True
 	return False
 
@@ -37,20 +37,42 @@ def row_check(lst, row, x):
 # all columns of the sudoku board
 def col_check(lst, col, y):
 	for i in range(9):
-		if (lst[i][col] == x):
+		if (lst[i][col] == y):
 			return True
 	return False
 
-def solve_puzzle(lst):
-	# current position on board
-	row = 0
-	col = 0
+# function to check if number exist in
+# 3x3 sudoku box
+def box_check(lst, row, col, num):
+	for i in range(3):
+		for j in range(3):
+			if (lst[i+row][j+col] == num):
+				return True
+	return False
 
-	if (not next_empty_pos(lst,row,col)):
+def solve(lst):
+	# current position on board
+	pos = [0,0]
+
+	if (not next_empty_pos(lst,pos)):
 		return True
 
+	row = pos[0]
+	col = pos[1]
+
 	for i in range(1,10):
-		
+		if (not row_check(lst, row, i) and not col_check(lst, col, i) and not box_check(lst, row - row%3, col - col%3, i)):
+			lst[row][col] = i
+			if (solve(lst)):
+				return True
+			lst[row][col] = 0
+
+	return False
 
 if __name__ == "__main__":
-	print(sudoku_setup())
+	problem = sudoku_setup()
+	if (solve(problem)):
+		for i in problem:
+			print(i)
+	else:
+		print("No solution.")
