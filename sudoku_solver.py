@@ -50,23 +50,28 @@ def box_check(lst, row, col, num):
 				return True
 	return False
 
+# function that solves a given sudoku puzzle
 def solve(lst):
 	# current position on board
 	pos = [0,0]
-
+	# gets next empty pos, if no next empty pos, we are done
 	if (not next_empty_pos(lst,pos)):
 		return True
-
+	# update current row / pos
 	row = pos[0]
 	col = pos[1]
-
+	# try numbers 1-9 on current pos of board
 	for i in range(1,10):
+		# check for i occurence in row, col, and box
 		if (not row_check(lst, row, i) and not col_check(lst, col, i) and not box_check(lst, row - row%3, col - col%3, i)):
+			# make tenative assignment on current pos 
 			lst[row][col] = i
+			# recurse step to traverse the puzzle
 			if (solve(lst)):
 				return True
+			# on back track, when failed, assign 0
 			lst[row][col] = 0
-
+	# back tracking step
 	return False
 
 if __name__ == "__main__":
