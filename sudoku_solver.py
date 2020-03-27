@@ -1,3 +1,6 @@
+from sudoku_gui import *
+import sys
+
 # function to create and prepopulate a list
 # representing a sudoku problem
 def sudoku_setup():
@@ -11,7 +14,7 @@ def sudoku_setup():
 		   [0,0,4,0,0,0,7,0,0],
 		   [0,0,0,0,0,7,0,6,0],
 		   [1,0,6,4,0,0,0,0,3]]
-	return lst2
+	return lst
 
 # function to check the next empty position
 # on the sudoku puzzle represented by a '0'
@@ -75,9 +78,42 @@ def solve(lst):
 	return False
 
 if __name__ == "__main__":
+	'''
 	problem = sudoku_setup()
 	if (solve(problem)):
 		for i in problem:
 			print(i)
 	else:
 		print("No solution.")
+	'''
+	pygame.init()
+
+	WHITE = (255, 255, 255)
+	LIGHTGRAY = (200, 200, 200)
+	BLACK = (0, 0, 0)
+	RED = (255, 0, 0)
+	GREEN = (0, 255, 0)
+	BLUE = (0, 0, 255)
+	YELLOW = (255, 255, 255)
+	WIDTH = 600
+	HEIGHT = 400
+
+	CANVAS = pygame.display.set_mode((WIDTH, HEIGHT))
+	pygame.display.set_caption('Sudoku')
+	CANVAS.fill(LIGHTGRAY)
+
+	SOLVEBUTTON = button(20, 20, 90, 60, WHITE, 'Solve')
+
+	while True:
+		SOLVEBUTTON.draw(CANVAS)
+		for event in pygame.event.get():
+			pos = pygame.mouse.get_pos()
+			if (event.type == pygame.QUIT):
+				pygame.quit()
+				sys.exit()
+			if (event.type == pygame.MOUSEMOTION):
+				if (SOLVEBUTTON.hover(pos)):
+					SOLVEBUTTON.color = (225,225,225)
+				else:
+					SOLVEBUTTON.color = WHITE
+		pygame.display.update()
