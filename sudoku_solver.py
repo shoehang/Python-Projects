@@ -14,7 +14,12 @@ def sudoku_setup():
 		   [0,0,4,0,0,0,7,0,0],
 		   [0,0,0,0,0,7,0,6,0],
 		   [1,0,6,4,0,0,0,0,3]]
-	return lst
+	boxes = [[] for _ in range(9)]
+	for i in range(len(lst)):
+		for j in range(len(lst)):
+			num = box(10 + (i * 30), 10 + (j * 30), 28, 28, (255,255,255), str(lst[i][j]))
+			boxes[i].append(num)
+	return boxes
 
 # function to check the next empty position
 # on the sudoku puzzle represented by a '0'
@@ -78,14 +83,6 @@ def solve(lst):
 	return False
 
 if __name__ == "__main__":
-	'''
-	problem = sudoku_setup()
-	if (solve(problem)):
-		for i in problem:
-			print(i)
-	else:
-		print("No solution.")
-	'''
 	pygame.init()
 
 	WHITE = (255, 255, 255)
@@ -102,10 +99,15 @@ if __name__ == "__main__":
 	pygame.display.set_caption('Sudoku')
 	CANVAS.fill(LIGHTGRAY)
 
-	SOLVEBUTTON = button(20, 20, 90, 60, WHITE, 'Solve')
-
+	SOLVEBUTTON = box(300, 300, 90, 60, WHITE, 'Solve')
+	problem = sudoku_setup()
+	for row in problem:
+		for col in row:
+			col.draw(CANVAS)
+	
 	while True:
 		SOLVEBUTTON.draw(CANVAS)
+		
 		for event in pygame.event.get():
 			pos = pygame.mouse.get_pos()
 			if (event.type == pygame.QUIT):
@@ -117,3 +119,4 @@ if __name__ == "__main__":
 				else:
 					SOLVEBUTTON.color = WHITE
 		pygame.display.update()
+	
