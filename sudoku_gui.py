@@ -9,16 +9,16 @@ class box():
 		self.color = color
 		self.text = text
 
-	def getText(self):
+	def getNum(self):
 		return self.text
 
-	def setText(self, newText):
+	def setNum(self, newText):
 		self.text = newText
 
 	def draw(self, canvas):
 		pygame.draw.rect(canvas, self.color, (self.x, self.y, self.width, self.height))
 		font = pygame.font.SysFont('comicsans', 30)
-		text = font.render(self.text, 1, (0,0,0))
+		text = font.render(str(self.text), 1, (0,0,0))
 		canvas.blit(text, (self.x + int(self.width/2 - text.get_width()/2), self.y + int(self.height/2 - text.get_height()/2)))
 
 	def hover(self, pos):
