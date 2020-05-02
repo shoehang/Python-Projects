@@ -9,11 +9,33 @@ class box():
 		self.color = color
 		self.text = text
 
-	def getNum(self):
+	def getText(self):
 		return self.text
 
-	def setNum(self, newText):
+	def setText(self, newText):
 		self.text = newText
+
+	def setNext(self):
+		if (self.text == 0):
+			self.text = 1
+		elif (self.text == 1):
+			self.text = 2
+		elif (self.text == 2):
+			self.text = 3
+		elif (self.text == 3):
+			self.text = 4
+		elif (self.text == 4):
+			self.text = 5
+		elif (self.text == 5):
+			self.text = 6
+		elif (self.text == 6):
+			self.text = 7
+		elif (self.text == 7):
+			self.text = 8
+		elif (self.text == 8):
+			self.text = 9
+		elif (self.text == 9):
+			self.text = 0				
 
 	def draw(self, canvas):
 		pygame.draw.rect(canvas, self.color, (self.x, self.y, self.width, self.height))

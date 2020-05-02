@@ -30,7 +30,7 @@ def next_empty_pos(lst, pos):
 	for row in range(9):
 		for col in range(9):
 			currBox = lst[row][col]
-			if (currBox.getNum() == 0):
+			if (currBox.getText() == 0):
 				pos[0] = row
 				pos[1] = col
 				return True
@@ -41,7 +41,7 @@ def next_empty_pos(lst, pos):
 def row_check(lst, row, x):
 	for i in range(9):
 		currBox = lst[row][i]
-		if (currBox.getNum() == x):
+		if (currBox.getText() == x):
 			return True
 	return False
 
@@ -50,7 +50,7 @@ def row_check(lst, row, x):
 def col_check(lst, col, y):
 	for i in range(9):
 		currBox = lst[i][col]
-		if (currBox.getNum() == y):
+		if (currBox.getText() == y):
 			return True
 	return False
 
@@ -60,7 +60,7 @@ def box_check(lst, row, col, num):
 	for i in range(3):
 		for j in range(3):
 			currBox = lst[i+row][i+col]
-			if (currBox.getNum() == num):
+			if (currBox.getText() == num):
 				return True
 	return False
 
@@ -80,13 +80,13 @@ def solve(lst, canvas):
 		if (not row_check(lst, row, i) and not col_check(lst, col, i) and not box_check(lst, row - row%3, col - col%3, i)):
 			# make tenative assignment on current pos 
 			currBox = lst[row][col]
-			currBox.setNum(i)
+			currBox.setText(i)
 			currBox.draw(canvas)
 			# recurse step to traverse the puzzle
 			if (solve(lst, canvas)):
 				return True
 			# on back track, when failed, assign 0
-			currBox.setNum(0)
+			currBox.setText(0)
 			currBox.draw(canvas)
 	# back tracking step
 	return False
@@ -106,8 +106,9 @@ if __name__ == "__main__":
 	CANVAS.fill(GRAY)
 
 	SOLVEBUTTON = box(10, 290, 90, 60, WHITE, 'Solve')
+	RESETBUTTON = box(110, 290, 90, 60, WHITE, 'Reset')
+	TEXTBOX = box(10, 360, 268, 30, WHITE, '')
 	problem = sudoku_setup()
-
 
 	while True:
 		# drawing grid lines
@@ -119,8 +120,10 @@ if __name__ == "__main__":
 		for row in problem:
 			for col in row:
 				col.draw(CANVAS)
-		# drawing solve button
+		# drawing buttons
 		SOLVEBUTTON.draw(CANVAS)
+		RESETBUTTON.draw(CANVAS)
+		TEXTBOX.draw(CANVAS)
 
 		# event fetching
 		for event in pygame.event.get():
@@ -142,16 +145,26 @@ if __name__ == "__main__":
 					SOLVEBUTTON.color = LIGHTGRAY
 				else:
 					SOLVEBUTTON.color = WHITE
+				# reset button
+				if (RESETBUTTON.hover(pos)):
+					RESETBUTTON.color = LIGHTGRAY
+				else:
+					RESETBUTTON.color = WHITE
 			# mouse click over:		
 			if (event.type == pygame.MOUSEBUTTONDOWN):
 				# number boxes
 				for row in problem:
 					for NUMBOX in row:
 						if (NUMBOX.hover(pos)):
-							NUMBOX.color = LIGHTGRAY
-						else:
-							NUMBOX.color = WHITE
+							NUMBOX.setNext()
 				# solve button
 				if (SOLVEBUTTON.hover(pos)):
-					solve(problem, CANVAS)
+					if (solve(problem, CANVAS)):
+						TEXTBOX.setText('Solution Found')
+					else:
+						TEXTBOX.setText('No Solution Found')
+				# reset button
+				if (RESETBUTTON.hover(pos)):
+					problem = sudoku_setup()
+					TEXTBOX.setText(' ')
 		pygame.display.update()
