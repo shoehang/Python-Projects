@@ -3,20 +3,22 @@ import sys
 
 # function to create and prepopulate a list
 # representing a sudoku problem
+# *change values to accomodate different puzzles
 def sudoku_setup():
 	lst = [[] for _ in range(9)]
-	lst = [[4,0,0,0,0,2,8,0,9],
-		   [0,2,0,1,0,0,0,0,0],
-		   [0,0,5,0,0,0,6,0,0],
-		   [7,0,0,0,3,0,0,0,0],
-		   [0,3,0,2,1,8,0,7,0],
-		   [0,0,0,0,9,0,0,0,8],
-		   [0,0,4,0,0,0,7,0,0],
-		   [0,0,0,0,0,7,0,6,0],
-		   [1,0,6,4,0,0,0,0,3]]
+	lst = [[3,4,0,0,0,7,0,2,6],
+		   [0,2,0,0,0,4,8,0,1],
+		   [0,0,1,2,0,5,0,0,0],
+		   [2,5,0,6,0,0,0,0,0],
+		   [6,8,0,9,0,0,3,4,0],
+		   [0,1,0,4,0,2,0,0,8],
+		   [1,6,0,0,8,9,0,3,0],
+		   [4,0,9,0,2,0,6,0,0],
+		   [0,0,8,7,4,6,2,0,0]]
 	boxes = [[] for _ in range(9)]
 	for i in range(len(lst)):
 		for j in range(len(lst)):
+			#dynamic spacing between boxes
 			num = box(10 + (i * 30), 10 + (j * 30), 28, 28, (255,255,255), lst[i][j])
 			boxes[i].append(num)
 	return boxes
@@ -63,7 +65,7 @@ def box_check(lst, row, col, num):
 	return False
 
 # function that solves a given sudoku puzzle
-def solve(lst):
+def solve(lst, canvas):
 	# current position on board
 	pos = [0,0]
 	# gets next empty pos, if no next empty pos, we are done
@@ -79,11 +81,13 @@ def solve(lst):
 			# make tenative assignment on current pos 
 			currBox = lst[row][col]
 			currBox.setNum(i)
+			currBox.draw(canvas)
 			# recurse step to traverse the puzzle
-			if (solve(lst)):
+			if (solve(lst, canvas)):
 				return True
 			# on back track, when failed, assign 0
 			currBox.setNum(0)
+			currBox.draw(canvas)
 	# back tracking step
 	return False
 
@@ -91,35 +95,63 @@ if __name__ == "__main__":
 	pygame.init()
 
 	WHITE = (255, 255, 255)
-	LIGHTGRAY = (200, 200, 200)
+	GRAY = (190, 190, 190)
+	LIGHTGRAY = (225, 225, 225)
 	BLACK = (0, 0, 0)
-	WIDTH = 600
+	WIDTH = 288
 	HEIGHT = 400
 
 	CANVAS = pygame.display.set_mode((WIDTH, HEIGHT))
 	pygame.display.set_caption('Sudoku')
-	CANVAS.fill(LIGHTGRAY)
+	CANVAS.fill(GRAY)
 
-	SOLVEBUTTON = box(300, 300, 90, 60, WHITE, 'Solve')
+	SOLVEBUTTON = box(10, 290, 90, 60, WHITE, 'Solve')
 	problem = sudoku_setup()
 
+
 	while True:
+		# drawing grid lines
+		pygame.draw.line(CANVAS, BLACK, (98, 10), (98, 278), 2)
+		pygame.draw.line(CANVAS, BLACK, (188, 10), (188, 278), 2)
+		pygame.draw.line(CANVAS, BLACK, (10, 98), (278, 98), 2)
+		pygame.draw.line(CANVAS, BLACK, (10, 188), (278, 188), 2)
+		# drwaing number boxes
 		for row in problem:
 			for col in row:
 				col.draw(CANVAS)
-
+		# drawing solve button
 		SOLVEBUTTON.draw(CANVAS)
+
+		# event fetching
 		for event in pygame.event.get():
 			pos = pygame.mouse.get_pos()
 			if (event.type == pygame.QUIT):
 				pygame.quit()
 				sys.exit()
+			# mouse hovers over:
 			if (event.type == pygame.MOUSEMOTION):
+				# number boxes
+				for row in problem:
+					for NUMBOX in row:
+						if (NUMBOX.hover(pos)):
+							NUMBOX.color = LIGHTGRAY
+						else:
+							NUMBOX.color = WHITE
+				# solve button
 				if (SOLVEBUTTON.hover(pos)):
-					SOLVEBUTTON.color = (225,225,225)
+					SOLVEBUTTON.color = LIGHTGRAY
 				else:
 					SOLVEBUTTON.color = WHITE
+			# mouse click over:		
 			if (event.type == pygame.MOUSEBUTTONDOWN):
+				# number boxes
+				for row in problem:
+					for NUMBOX in row:
+						if (NUMBOX.hover(pos)):
+							NUMBOX.color = LIGHTGRAY
+						else:
+							NUMBOX.color = WHITE
+				# solve button
 				if (SOLVEBUTTON.hover(pos)):
-					solve(problem)
+					solve(problem, CANVAS)
 		pygame.display.update()
