@@ -3,12 +3,22 @@ import pygame
 
 #elementary box clss w draw method
 class box():
-	def __init__(self, x, y, width, height, color):
+	def __init__(self, x, y, width, height, text, color):
 		self.x = x
 		self.y = y
 		self.width = width
 		self.height = height
+		self.text = text
 		self.color = color
+
+	def getPos(self):
+		return (self.x, self.y)
+
+	def getText(self):
+		return self.text
+
+	def setText(self, newText):
+		self.text = newText
 
 	def draw(self, canvas):
 		pygame.draw.rect(canvas, self.color, (self.x, self.y, self.width, self.height))
@@ -22,16 +32,23 @@ class box():
 # boxes etc
 def setup():
 	grid = [[] for _ in range(22)]
-	for row in range(len(grid)):
-		for col in range(len(grid)):
-			gridBox = box(2 + (row * 20), 2 + (col * 20), 19, 19, (255, 255, 255))
-			grid[row].append(gridBox)
+	for col in range(len(grid)):
+		for row in range(len(grid)):
+			gridBox = box(2 + (row * 20), 2 + (col * 20), 19, 19, " ", (255, 255, 255))
+			grid[col].append(gridBox)
 	return grid
 
 def redraw(grid, canvas):
 	for row in grid:
 		for col in row:
 			col.draw(canvas)
+
+def printText(grid):
+	for i in grid:
+		row = []
+		for j in i:
+			row.append(j.getText())
+		print(row)
 
 if __name__ == '__main__':
 	pygame.init()
@@ -56,9 +73,14 @@ if __name__ == '__main__':
 				pygame.quit()
 				sys.exit()
 			if (event.type == pygame.MOUSEBUTTONDOWN):
-				print("clicked")
 				for row in GRID:
 					for col in row:
 						if (col.hover(pos)):
-							col.color = BLACK
+							if (col.getText() == " "):
+								col.setText("#")
+								col.color = BLACK
+							else:
+								col.setText(" ")
+								col.color = WHITE
+							printText(GRID)
 		pygame.display.update()
