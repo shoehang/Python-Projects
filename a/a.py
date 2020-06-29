@@ -22,6 +22,10 @@ class box():
 
 	def draw(self, canvas):
 		pygame.draw.rect(canvas, self.color, (self.x, self.y, self.width, self.height))
+		if not(self.text == " " or self.text == "#" or self.text == "S" or self.text == "E"):
+			font = pygame.font.SysFont('comicsans', 25)
+			text = font.render(str(self.text), 1, (0,0,0))
+			canvas.blit(text, (self.x + int(self.width/2 - text.get_width()/2), self.y + int(self.height/2 - text.get_height()/2)))
 		
 	def hover(self, pos):
 		if (pos[0] > self.x and pos[0] < self.x + self.width):
@@ -55,17 +59,23 @@ if __name__ == '__main__':
 
 	WHITE = (255, 255, 255)
 	BLACK = (0, 0, 0)
+	RED = (255, 0, 0)
+	GREEN = (0, 255, 0)
 	WIDTH = 443
-	HEIGHT = 450
+	HEIGHT = 475
 
 	CANVAS = pygame.display.set_mode((WIDTH, HEIGHT))
 	pygame.display.set_caption('WIP algo')
 	CANVAS.fill(BLACK)
 
 	GRID = setup()
+	SOLVEBUTTON = box(2, 446, 100, 25, 'Find', WHITE)
+	RESETBUTTON = box(106, 446, 100, 25, 'Reset', WHITE)
 
 	while True:
 		redraw(GRID, CANVAS)
+		SOLVEBUTTON.draw(CANVAS)
+		RESETBUTTON.draw(CANVAS)
 
 		pos = pygame.mouse.get_pos()
 		for event in pygame.event.get():
@@ -83,4 +93,17 @@ if __name__ == '__main__':
 								col.setText(" ")
 								col.color = WHITE
 							printText(GRID)
+			if (event.type == pygame.KEYDOWN):
+				if (event.key == pygame.K_s):
+					for row in GRID:
+						for col in row:
+							if (col.hover(pos)):
+								col.setText("S")
+								col.color = GREEN
+				if (event.key == pygame.K_e):
+					for row in GRID:
+						for col in row:
+							if (col.hover(pos)):
+								col.setText("E")
+								col.color = RED
 		pygame.display.update()
