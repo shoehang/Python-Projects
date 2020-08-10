@@ -47,12 +47,15 @@ def redraw(grid, canvas):
 		for col in row:
 			col.draw(canvas)
 
-def printText(grid):
+def getMazeArray(grid):
+	mazeArray = []
 	for i in grid:
 		row = []
 		for j in i:
 			row.append(j.getText())
-		print(row)
+		mazeArray.append(row)
+	return mazeArray
+		
 
 if __name__ == '__main__':
 	pygame.init()
@@ -77,12 +80,23 @@ if __name__ == '__main__':
 		SOLVEBUTTON.draw(CANVAS)
 		RESETBUTTON.draw(CANVAS)
 
+		# pos of mouse on pygame window
 		pos = pygame.mouse.get_pos()
 		for event in pygame.event.get():
 			if (event.type == pygame.QUIT):
 				pygame.quit()
 				sys.exit()
+			# mousclick on:
 			if (event.type == pygame.MOUSEBUTTONDOWN):
+				# find
+				if (SOLVEBUTTON.hover(pos)):
+					print(getMazeArray(GRID))
+					print("finding")
+				# reset
+				if (RESETBUTTON.hover(pos)):
+					GRID = setup()
+					print("resetting")
+				# mazeblocks
 				for row in GRID:
 					for col in row:
 						if (col.hover(pos)):
@@ -92,7 +106,7 @@ if __name__ == '__main__':
 							else:
 								col.setText(" ")
 								col.color = WHITE
-							printText(GRID)
+			# key presses
 			if (event.type == pygame.KEYDOWN):
 				if (event.key == pygame.K_s):
 					for row in GRID:
