@@ -22,7 +22,6 @@ def atFinish(maze, path, endCheck, moveCheck):
 	# check if end pos == maze end
 	if (endCheck):
 		if (maze[startY][startX] == "E"):
-			print(path)
 			return True
 	# check if move is valid
 	if (moveCheck):
@@ -31,13 +30,7 @@ def atFinish(maze, path, endCheck, moveCheck):
 				return True
 	return False
 
-if __name__ == '__main__':
-	grid = [[' ', ' ', ' ', ' ', 'E', ' '],
-			[' ', '#', ' ', ' ', '#', ' '],
-			[' ', ' ', '#', ' ', '#', ' '],
-			[' ', ' ', ' ', '#', ' ', ' '],
-			[' ', 'S', ' ', ' ', '#', ' '],
-			[' ', ' ', ' ', ' ', ' ', ' ']]
+def findShortestPath(grid):
 	# new queue
 	pathQueue = queue.Queue()
 	# start at empty path
@@ -53,3 +46,4 @@ if __name__ == '__main__':
 			# check validity of newPath, and add to queue
 			if atFinish(grid, newPath, False, True):
 				pathQueue.put(newPath)
+	return currentPath
