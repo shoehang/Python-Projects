@@ -122,8 +122,8 @@ if __name__ == '__main__':
 					if (START and END):
 						print("finding")
 						#pygame.time.wait(30000)
-						print(findShortestPath(getMazeArray(GRID)))
-						#paintPath(GRID, STARTCOL, STARTROW, findShortestPath(getMazeArray(GRID)))
+						#print(findShortestPath(getMazeArray(GRID)))
+						paintPath(GRID, STARTCOL, STARTROW, findShortestPath(getMazeArray(GRID)))
 					#########################################################
 					else:
 						print("missing start or end")
