@@ -1,6 +1,6 @@
 import sys
 import pygame
-from t import *
+from maze_solver import *
 
 #elementary box clss w draw method
 class box():
