@@ -34,9 +34,10 @@ class box():
 				return True
 		return False
 
-# create 22x22 grid of box class drawable objects
+# create 7x7 grid of box class drawable objects
 def setup():
-	grid = [[] for _ in range(22)]
+	#grid = [[] for _ in range(22)]
+	grid = [[] for _ in range(7)]
 	for row in range(len(grid)):
 		for col in range(len(grid)):
 			gridBox = box(2 + (col * 20), 2 + (row * 20), 19, 19, " ", (255, 255, 255))
@@ -84,8 +85,8 @@ if __name__ == '__main__':
 	BLACK = (0, 0, 0)
 	RED = (255, 0, 0)
 	GREEN = (0, 255, 0)
-	WIDTH = 443
-	HEIGHT = 475
+	WIDTH = 143
+	HEIGHT = 197
 
 	# flags if start and end exists. begins false, since empty grid
 	START = None
@@ -96,12 +97,12 @@ if __name__ == '__main__':
 	STARTCOL = None
 
 	CANVAS = pygame.display.set_mode((WIDTH, HEIGHT))
-	pygame.display.set_caption('WIP algo')
+	pygame.display.set_caption('Maze')
 	CANVAS.fill(BLACK)
 
 	GRID = setup()
-	SOLVEBUTTON = box(2, 446, 100, 25, 'Find', WHITE)
-	RESETBUTTON = box(106, 446, 100, 25, 'Reset', WHITE)
+	SOLVEBUTTON = box(2, 143, 139, 25, 'Find', WHITE)
+	RESETBUTTON = box(2, 170, 139, 25, 'Reset', WHITE)
 
 	while True:
 		redraw(GRID, CANVAS)
@@ -118,13 +119,9 @@ if __name__ == '__main__':
 			if (event.type == pygame.MOUSEBUTTONDOWN):
 				# find
 				if (SOLVEBUTTON.hover(pos)):
-					#########################################################
 					if (START and END):
 						print("finding")
-						#pygame.time.wait(30000)
-						#print(findShortestPath(getMazeArray(GRID)))
 						paintPath(GRID, STARTCOL, STARTROW, findShortestPath(getMazeArray(GRID)))
-					#########################################################
 					else:
 						print("missing start or end")
 				# reset
