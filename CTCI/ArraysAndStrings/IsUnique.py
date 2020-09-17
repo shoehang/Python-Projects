@@ -12,4 +12,4 @@ def IsUnique(string):
 			hashTable.insert(character, character)
 	return True
 
-print(IsUnique("abcdefghijjk"))
+print(IsUnique("abcdefghijk"))

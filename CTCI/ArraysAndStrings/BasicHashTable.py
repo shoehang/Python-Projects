@@ -26,7 +26,7 @@ class HashTable:
 		for i in range(len(key)):
 			hash_val = ((hash_val + (ord(key[i]) - ord('a') + 1) * power_p) % m)
 			power_p = (power_p * p) % m
-		hash_val = hash_val % 100
+		hash_val = hash_val % self.capacity
 		'''
 		hashResult = 0
 		for index, character in enumerate(key):
@@ -58,21 +58,28 @@ class HashTable:
 	def remove(self, key):
 		index = self.hash(key)
 		node = self.buckets[index]
+		previous = None
 		while node is not None and node.key != key:
 			previous = node
 			node = node.next
 		# not found
-		if node is None:
+		if node == None:
 			return None
 		# found
 		else:
 			self.size -= 1
 			found = node.value
 			if previous == None:
-				node = None
+				if node.next == None:
+					self.buckets[index] = None
+				else:
+					previous = node.next
+					node.next = None
+					self.buckets[index] = previous
+					node = None
 			else:
 				# same removal in normal linked lists
-				previous.next = node.next
+				previous.next = previous.next.next
 			return found
 
 	def find(self, key):
